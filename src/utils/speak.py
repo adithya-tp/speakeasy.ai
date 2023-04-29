@@ -7,8 +7,9 @@ class SpeakieBot():
     def __init__(self):
         account_sid = os.environ['TWILIO_SID']
         auth_token = os.environ['TWILIO_AUTH']
-        # Create a Twilio client object
+        # Create a Twilio client object, and response object
         self.client = Client(account_sid, auth_token)
+        self.response = VoiceResponse()
 
         # Track recording count for unique filenames
         self.recording_count = 0
@@ -20,7 +21,7 @@ class SpeakieBot():
             Construct and return 'call' instance
         """
         call = self.client.calls.create(
-            url="http://demo.twilio.com/docs/voice.xml",
+            url="https://8069-2601-547-b04-4993-908a-97bc-3ad0-2df1.ngrok.io/speakeasy/make_reservation",
             from_=self.phone_number,
             to=to,
         )
