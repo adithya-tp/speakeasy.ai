@@ -1,4 +1,5 @@
 import os
+from utils.text2audio import Text2Audio
 from fastapi import Response
 from twilio.rest import Client
 from twilio.twiml.voice_response import VoiceResponse
@@ -10,6 +11,7 @@ class SpeakieBot():
         auth_token = os.environ['TWILIO_AUTH']
         # Create a Twilio client object, and response object
         self.client = Client(account_sid, auth_token)
+        self.synthesizer = Text2Audio()
 
         # Track recording count for unique filenames
         self.recording_count = 0
@@ -30,11 +32,14 @@ class SpeakieBot():
         )
         self.call_sid = call.sid
 
-    def initiate_convo(self, audio_file_path):
+    def talk(self, text, end_convo=False):
+        audio_file_path = self.synthesizer.save_audio_path(text)
+        audio_file = f"{self.base_url}/static/{audio_file_path}"
         response = VoiceResponse()
-        response.play(f"{self.base_url}/static/{audio_file_path}")
-        response.record(
-            action="/speakeasy/process_audio", timeout=3, transcribe=False
-        )
+        response.play(audio_file)
+        if not end_convo:
+            response.record(
+                action="/speakeasy/process_audio", timeout=3, transcribe=False
+            )
 
         return Response(content=response.to_xml(), media_type="application/xml")

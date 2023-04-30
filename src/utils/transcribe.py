@@ -6,7 +6,7 @@ from pywhispercpp.model import Model
 
 class Transcriber():
     def __init__(self):
-        self.model = Model('small.en', print_progress=False)
+        self.model = Model('tiny.en', print_progress=False)
 
     def get_transcription(self, recording_url):
         time.sleep(2)

@@ -11,6 +11,7 @@ class Thinker:
         self.messages = [
             {"role": "system", "content": self.system_msg},
         ]
+        self._talked = False
     
     def reply(self, receptionist_response):
         self.messages.append(
@@ -21,25 +22,25 @@ class Thinker:
             messages=self.messages
         )
         self._update_msgs(reply)
-        return self._last_msg()
+        self._talked = True
     
     def _last_msg(self):
-        return self.messages[-1]['content']
+        return self.messages[-1]["content"]
     
     def _update_msgs(self, reply):
         self.messages.append({
             "role": "assistant", 
             "content": reply['choices'][0]['message']['content']
         })
-        print(self.messages)
+        print(self._last_msg())
     
     def _is_done(self):
         self.messages.append(
-            {"role": "user", "content": {self.checkin_msg}}
+            {"role": "user", "content": self.checkin_msg}
         )
         reply = openai.ChatCompletion.create(
             model=self.model,
             messages=self.messages
         )
         self._update_msgs(reply)
-        return self._last_msg() == 'True'
+        return self._last_msg() == "True"
