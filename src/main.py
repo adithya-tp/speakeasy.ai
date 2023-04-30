@@ -2,7 +2,7 @@ import os
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 
-from utils import speak, transcribe, think, text2audio
+from utils import speak, transcribe, think
 
 
 app = FastAPI()
@@ -41,6 +41,7 @@ async def converse(request: Request):
         msg = "Thank you, bye bye!"
         return bot.talk(msg, end_convo=True)
 
+    print("Continuing Conversation!!")
     form_data = await request.form()
     recording_url = form_data['RecordingUrl']
     transcript = transcriber.get_transcription(recording_url)
