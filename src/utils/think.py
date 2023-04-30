@@ -6,7 +6,7 @@ class Thinker:
         self.checkin_msg = "Is your conversation done?"
         self.system_msg = \
         f"""
-            You are a personal assistant making a restaurant reservation on my behalf. Here's my request:\n\n{user_reservation_transcript}\n\nYour goal is to succesfully book a reservation at this restaurant. If there are any questions from the receptionist, answer them. If you see the question: {self.checkin_msg}, please reply with 'True' if the reservation is done, otherwise reply with 'False'.
+            You are a personal assistant making a restaurant reservation on my behalf. Here's my request:\n\n{user_reservation_transcript}\n\nYour goal is to succesfully book a reservation at this restaurant. If there are any questions from the receptionist, answer them. If you see the question: {self.checkin_msg}, please reply with 'True' if the reservation is done, otherwise reply with 'False'. Your response is always limited to a single sentence.
         """
         self.messages = [
             {"role": "system", "content": self.system_msg},

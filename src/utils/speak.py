@@ -43,3 +43,10 @@ class SpeakieBot():
             )
 
         return Response(content=response.to_xml(), media_type="application/xml")
+    
+    def send_confirmation(self):
+        self.client.messages.create(
+            body="I've successfully made your reservation John!",
+            from_=self.phone_number,
+            to=os.environ['TWILIO_TO']
+        )
