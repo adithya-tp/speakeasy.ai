@@ -1,5 +1,7 @@
 import os
+from fastapi import Response
 from twilio.rest import Client
+from twilio.twiml.voice_response import VoiceResponse
 
 
 class SpeakieBot():
@@ -22,24 +24,17 @@ class SpeakieBot():
             Construct and return 'call' instance
         """
         call = self.client.calls.create(
-            url=f"{self.base_url}/speakeasy/make_reservation",
+            url=f"{self.base_url}/speakeasy/converse",
             from_=self.phone_number,
             to=to,
         )
         self.call_sid = call.sid
 
-    def respond(self,audio_file_path):
-        assert self.call_sid is not None
-
-        twiml_string = \
-        f"""
-            <Response>
-                <Play>
-                    {self.base_url}/static/{audio_file_path}
-                </Play>
-            </Response>
-        """
-        self.client.calls(self.call_sid).update(
-            twiml=twiml_string
+    def initiate_convo(self, audio_file_path):
+        response = VoiceResponse()
+        response.play(f"{self.base_url}/static/{audio_file_path}")
+        response.record(
+            action="/speakeasy/process_audio", timeout=3, transcribe=False
         )
 
+        return Response(content=response.to_xml(), media_type="application/xml")
