@@ -10,6 +10,7 @@ class Text2Audio:
 
     def save_audio_path(self, text, filename="audio.wav"):
         path = 'generated_audios/' + filename
-        audio = generate(text)
-        with open(path, 'wb') as f:
-            f.write(audio)
+        audio_bytes = generate(text)
+        audio = AudioSegment.from_file(io.BytesIO(audio_bytes))
+        audio.export(path, format="wav")
+        return filename
